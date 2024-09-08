@@ -9,6 +9,8 @@ import com.imjustdoom.minecrashservice.service.ErrorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * ErrorController as in the Controller for handling user submitted errors
  */
@@ -24,7 +26,7 @@ public class ErrorController {
 
     @PostMapping("check")
     public ResponseEntity<?> checkError(@RequestBody CheckErrorDto checkErrorDto) {
-        if (checkErrorDto.error().length() > 10240) {
+        if (checkErrorDto.error().getBytes().length > 24 * 1024 * 1024) {
             return ResponseEntity.badRequest().body(ErrorDto.create("Error length is too long, max length is 10240"));
         }
 
