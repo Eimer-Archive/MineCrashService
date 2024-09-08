@@ -31,6 +31,7 @@ public class ErrorController {
         ErrorSolutionDto solution = this.errorService.findSolution(checkErrorDto.error());
         if (solution == null) {
             return ResponseEntity.ok(ResponseDto.create("Unable to solve this error, it has been submitted to the database for review. " +
+                    "Try updating any server software (Paper, Purpur etc), mods, plugins or the Minecraft version itself. " +
                     "Please join the discord server to provide more context or help solve it. Here is the reference id \"" +
                     this.errorService.getSubmittedErrorIdByError(checkErrorDto.error()).orElseGet(() ->
                             this.errorService.submitError(checkErrorDto.error())).getId() + "\"."));
