@@ -28,15 +28,15 @@ public class ErrorController {
             return ResponseEntity.badRequest().body(ErrorDto.create("Error length is too long, max length is 10240"));
         }
 
-        String solution = this.errorService.findSolution(checkErrorDto.error());
-        if (solution == null || solution.isBlank()) {
+        ErrorSolutionDto solution = this.errorService.findSolution(checkErrorDto.error());
+        if (solution == null) {
             return ResponseEntity.ok(ResponseDto.create("Unable to solve this error, it has been submitted to the database for review. " +
                     "Please join the discord server to provide more context or help solve it. Here is the reference id \"" +
                     this.errorService.getSubmittedErrorIdByError(checkErrorDto.error()).orElseGet(() ->
                             this.errorService.submitError(checkErrorDto.error())).getId() + "\"."));
         }
 
-        return ResponseEntity.ok(ErrorSolutionDto.create(solution));
+        return ResponseEntity.ok(solution);
     }
 
     @GetMapping("submittedCount")

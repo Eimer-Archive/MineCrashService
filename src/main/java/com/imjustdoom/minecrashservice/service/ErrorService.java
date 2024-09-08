@@ -1,5 +1,6 @@
 package com.imjustdoom.minecrashservice.service;
 
+import com.imjustdoom.minecrashservice.dto.out.ErrorSolutionDto;
 import com.imjustdoom.minecrashservice.model.SolutionModel;
 import com.imjustdoom.minecrashservice.model.SubmittedErrorModel;
 import com.imjustdoom.minecrashservice.repository.SolutionRepository;
@@ -21,7 +22,7 @@ public class ErrorService {
         this.solutionRepository = solutionRepository;
     }
 
-    public String findSolution(String error) {
+    public ErrorSolutionDto findSolution(String error) {
         for (SolutionModel solutionModel : this.solutionRepository.findAll()) {
             boolean matches = false;
             for (String match : solutionModel.getMatches()) {
@@ -41,7 +42,7 @@ public class ErrorService {
                 }
             }
 
-            return solution;
+            return ErrorSolutionDto.create(solutionModel.getError(), solution);
         }
         return null;
     }
