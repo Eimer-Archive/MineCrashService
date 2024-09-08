@@ -13,7 +13,7 @@ public class SubmittedErrorModel {
     @Column
     private LocalDateTime submitTime;
     @Lob
-    @Column(length = 10240)
+    @Column(length = 102400) // Should be 800kb
     private String error;
 
     public SubmittedErrorModel() {}
