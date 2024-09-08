@@ -86,19 +86,19 @@ public class ErrorService {
         }
         SolutionModel solution = optionalSolutionModel.get();
 
-        if (!modifyKnownErrorDto.error().isBlank()) {
+        if (modifyKnownErrorDto.error() != null && !modifyKnownErrorDto.error().isBlank()) {
             solution.setError(modifyKnownErrorDto.error());
         }
 
-        if (!modifyKnownErrorDto.solution().isBlank()) {
+        if (modifyKnownErrorDto.solution() != null && !modifyKnownErrorDto.solution().isBlank()) {
             solution.setSolution(modifyKnownErrorDto.solution());
         }
 
-        if (!modifyKnownErrorDto.matches().isEmpty()) {
+        if (modifyKnownErrorDto.matches() != null && !modifyKnownErrorDto.matches().isEmpty()) {
             solution.setMatches(modifyKnownErrorDto.matches());
         }
 
-        if (!modifyKnownErrorDto.arguments().isEmpty()) {
+        if (modifyKnownErrorDto.arguments() != null && !modifyKnownErrorDto.arguments().isEmpty()) {
             solution.setArguments(modifyKnownErrorDto.arguments());
         }
         this.solutionRepository.save(solution);
