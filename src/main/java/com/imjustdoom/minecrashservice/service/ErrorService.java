@@ -40,6 +40,8 @@ public class ErrorService {
                 if (matcher.find()) {
                     solution = solution.replaceAll("%" + arg, matcher.group(1));
                 }
+
+                solution = solution.replaceAll("%" + arg, "(Unable to find extra info)");
             }
 
             return ErrorSolutionDto.create(solutionModel.getError(), solution);
