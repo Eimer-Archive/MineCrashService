@@ -66,7 +66,7 @@ public class ErrorService {
      * @return the object
      */
     public SubmittedErrorModel submitError(String error) {
-        SubmittedErrorModel submittedErrorModel = new SubmittedErrorModel(error);
+        SubmittedErrorModel submittedErrorModel = new SubmittedErrorModel(replaceIps(error));
         return this.errorRepository.save(submittedErrorModel);
     }
 
@@ -76,5 +76,9 @@ public class ErrorService {
 
     public long getSubmittedCount() {
         return this.errorRepository.count();
+    }
+
+    public String replaceIps(String string) {
+        return string.replaceAll("(?<!\\d)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(?!\\d)", "x.x.x.x");
     }
 }
