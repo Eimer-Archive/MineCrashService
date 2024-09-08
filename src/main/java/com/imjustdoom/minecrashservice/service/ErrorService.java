@@ -1,5 +1,6 @@
 package com.imjustdoom.minecrashservice.service;
 
+import com.imjustdoom.minecrashservice.dto.in.ModifyKnownErrorDto;
 import com.imjustdoom.minecrashservice.dto.out.ErrorSolutionDto;
 import com.imjustdoom.minecrashservice.model.SolutionModel;
 import com.imjustdoom.minecrashservice.model.SubmittedErrorModel;
@@ -24,12 +25,16 @@ public class ErrorService {
 
     public ErrorSolutionDto findSolution(String error) {
         for (SolutionModel solutionModel : this.solutionRepository.findAll()) {
+
+            // Matches system is an "or"
+            // Maybe make a system to specify "or"/"and" for matches
             boolean matches = false;
             for (String match : solutionModel.getMatches()) {
                 if (!error.contains(match)) {
                     continue;
                 }
                 matches = true;
+                break;
             }
             if (!matches) continue;
 
@@ -72,6 +77,33 @@ public class ErrorService {
 
     public Optional<SubmittedErrorModel> getSubmittedErrorIdByError(String error) {
         return this.errorRepository.findByError(error);
+    }
+
+    public boolean modifySolution(ModifyKnownErrorDto modifyKnownErrorDto) {
+        Optional<SolutionModel> optionalSolutionModel = this.solutionRepository.findById(modifyKnownErrorDto.id());
+        if (optionalSolutionModel.isEmpty()) {
+            return false;
+        }
+        SolutionModel solution = optionalSolutionModel.get();
+
+        if (!modifyKnownErrorDto.error().isBlank()) {
+            solution.setError(modifyKnownErrorDto.error());
+        }
+
+        if (!modifyKnownErrorDto.solution().isBlank()) {
+            solution.setSolution(modifyKnownErrorDto.solution());
+        }
+
+        if (!modifyKnownErrorDto.matches().isEmpty()) {
+            solution.setMatches(modifyKnownErrorDto.matches());
+        }
+
+        if (!modifyKnownErrorDto.arguments().isEmpty()) {
+            solution.setArguments(modifyKnownErrorDto.arguments());
+        }
+        this.solutionRepository.save(solution);
+
+        return true;
     }
 
     public long getSubmittedCount() {

@@ -55,4 +55,20 @@ public class SolutionModel {
     public String getSolution() {
         return this.solution;
     }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public void setMatches(List<String> matches) {
+        this.matches = matches;
+    }
+
+    public void setArguments(Map<String, String> arguments) {
+        this.arguments = arguments;
+    }
+
+    public void setSolution(String solution) {
+        this.solution = solution;
+    }
 }
