@@ -1,15 +1,11 @@
 package com.imjustdoom.minecrashservice.controller;
 
 import com.imjustdoom.minecrashservice.dto.in.CheckErrorDto;
-import com.imjustdoom.minecrashservice.dto.out.ErrorDto;
-import com.imjustdoom.minecrashservice.dto.out.ErrorSolutionDto;
-import com.imjustdoom.minecrashservice.dto.out.CountDto;
-import com.imjustdoom.minecrashservice.dto.out.ResponseDto;
+import com.imjustdoom.minecrashservice.dto.out.*;
 import com.imjustdoom.minecrashservice.service.ErrorService;
+import com.imjustdoom.minecrashservice.service.StatisticsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * ErrorController as in the Controller for handling user submitted errors
@@ -19,9 +15,11 @@ import java.nio.charset.StandardCharsets;
 public class ErrorController {
 
     private final ErrorService errorService;
+    private final StatisticsService statisticsService;
 
-    public ErrorController(ErrorService errorService) {
+    public ErrorController(ErrorService errorService, StatisticsService statisticsService) {
         this.errorService = errorService;
+        this.statisticsService = statisticsService;
     }
 
     @PostMapping("check")
@@ -43,8 +41,8 @@ public class ErrorController {
         return ResponseEntity.ok(solution);
     }
 
-    @GetMapping("submittedCount")
-    public ResponseEntity<?> getSubmittedSize() {
-        return ResponseEntity.ok(CountDto.create(this.errorService.getSubmittedCount()));
+    @GetMapping("statistics")
+    public ResponseEntity<?> getStatistics() {
+        return ResponseEntity.ok(StatisticsDto.create(this.statisticsService.getSolvedErrors()));
     }
 }

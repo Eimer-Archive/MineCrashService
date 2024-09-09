@@ -18,9 +18,13 @@ public class ErrorService {
     private final SubmittedErrorRepository errorRepository;
     private final SolutionRepository solutionRepository;
 
-    public ErrorService(SubmittedErrorRepository errorRepository, SolutionRepository solutionRepository) {
+    private final StatisticsService statisticsService;
+
+    public ErrorService(SubmittedErrorRepository errorRepository, SolutionRepository solutionRepository, StatisticsService statisticsService) {
         this.errorRepository = errorRepository;
         this.solutionRepository = solutionRepository;
+
+        this.statisticsService = statisticsService;
     }
 
     public ErrorSolutionDto findSolution(String error) {
@@ -49,6 +53,7 @@ public class ErrorService {
                 solution = solution.replaceAll("%" + arg, "(Unable to find extra info)");
             }
 
+            this.statisticsService.incrementSolvedErrors();
             return ErrorSolutionDto.create(solutionModel.getError(), solution);
         }
         return null;
