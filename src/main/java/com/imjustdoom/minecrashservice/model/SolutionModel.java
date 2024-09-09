@@ -24,7 +24,7 @@ public class SolutionModel {
     @MapKeyColumn(name = "argument_key")
     @Column(name = "argument_value")
     private Map<String, String> arguments;
-    @Column
+    @Column(length = 1024)
     private String solution;
 
     public SolutionModel() {}
