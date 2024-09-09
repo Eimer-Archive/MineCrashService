@@ -43,6 +43,6 @@ public class ErrorController {
 
     @GetMapping("statistics")
     public ResponseEntity<?> getStatistics() {
-        return ResponseEntity.ok(StatisticsDto.create(this.statisticsService.getSolvedErrors()));
+        return ResponseEntity.ok(StatisticsDto.create(this.statisticsService.getSolvedErrors(), this.errorService.getSubmittedCount()));
     }
 }
