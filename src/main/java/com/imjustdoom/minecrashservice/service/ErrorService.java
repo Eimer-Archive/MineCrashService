@@ -27,6 +27,11 @@ public class ErrorService {
         this.statisticsService = statisticsService;
     }
 
+    /**
+     * Search for a solution that can be applied to this error
+     * @param error
+     * @return the found solution as a Dto or else null
+     */
     public ErrorSolutionDto findSolution(String error) {
         for (SolutionModel solutionModel : this.solutionRepository.findAll()) {
 
@@ -80,10 +85,20 @@ public class ErrorService {
         return this.errorRepository.save(submittedErrorModel);
     }
 
+    /**
+     * Get the submitted error by its error
+     * @param error
+     * @return Optional SubmittedErrorModel
+     */
     public Optional<SubmittedErrorModel> getSubmittedErrorIdByError(String error) {
         return this.errorRepository.findByError(error);
     }
 
+    /**
+     * Modify a submitted solution
+     * @param modifyKnownErrorDto
+     * @return
+     */
     public boolean modifySolution(ModifyKnownErrorDto modifyKnownErrorDto) {
         Optional<SolutionModel> optionalSolutionModel = this.solutionRepository.findById(modifyKnownErrorDto.id());
         if (optionalSolutionModel.isEmpty()) {
@@ -111,10 +126,19 @@ public class ErrorService {
         return true;
     }
 
+    /**
+     * Get how many errors are in line for review
+     * @return the errors in line for review as a long
+     */
     public long getSubmittedCount() {
         return this.errorRepository.count();
     }
 
+    /**
+     * Replace any IPv4 addresses with 'x.x.x.x'
+     * @param string
+     * @return
+     */
     public String replaceIps(String string) {
         return string.replaceAll("(?<!\\d)(?:(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(?!\\d)", "x.x.x.x");
     }
