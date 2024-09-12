@@ -1,10 +1,8 @@
 package com.imjustdoom.minecrashservice.service;
 
-import com.imjustdoom.minecrashservice.dto.in.ModifyKnownErrorDto;
 import com.imjustdoom.minecrashservice.dto.out.ErrorSolutionDto;
 import com.imjustdoom.minecrashservice.model.SolutionModel;
 import com.imjustdoom.minecrashservice.model.SubmittedErrorModel;
-import com.imjustdoom.minecrashservice.repository.SolutionRepository;
 import com.imjustdoom.minecrashservice.repository.SubmittedErrorRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +14,14 @@ import java.util.regex.Pattern;
 public class ErrorService {
 
     private final SubmittedErrorRepository errorRepository;
-    private final SolutionRepository solutionRepository;
 
+    private final SolutionService solutionService;
     private final StatisticsService statisticsService;
 
-    public ErrorService(SubmittedErrorRepository errorRepository, SolutionRepository solutionRepository, StatisticsService statisticsService) {
+    public ErrorService(SubmittedErrorRepository errorRepository, SolutionService solutionService, StatisticsService statisticsService) {
         this.errorRepository = errorRepository;
-        this.solutionRepository = solutionRepository;
 
+        this.solutionService = solutionService;
         this.statisticsService = statisticsService;
     }
 
@@ -33,7 +31,7 @@ public class ErrorService {
      * @return the found solution as a Dto or else null
      */
     public ErrorSolutionDto findSolution(String error) {
-        for (SolutionModel solutionModel : this.solutionRepository.findAll()) {
+        for (SolutionModel solutionModel : this.solutionService.getAllSolutions()) {
 
             // Matches system is an "or"
             // Maybe make a system to specify "or"/"and" for matches
@@ -49,7 +47,7 @@ public class ErrorService {
 
             String solution = solutionModel.getSolution();
             for (String arg : solutionModel.getArguments().keySet()) {
-                Matcher matcher = Pattern.compile(solutionModel.getArguments().get(arg)).matcher(error);
+                Matcher matcher = Pattern.compile(solutionModel.getArguments().get(arg)).matcher(error); // TODO: Allow multiple possibly ways if the initial one fails
 
                 if (matcher.find()) {
                     solution = solution.replaceAll("%" + arg, matcher.group(1));
@@ -92,38 +90,6 @@ public class ErrorService {
      */
     public Optional<SubmittedErrorModel> getSubmittedErrorIdByError(String error) {
         return this.errorRepository.findByError(error);
-    }
-
-    /**
-     * Modify a submitted solution
-     * @param modifyKnownErrorDto
-     * @return
-     */
-    public boolean modifySolution(ModifyKnownErrorDto modifyKnownErrorDto) {
-        Optional<SolutionModel> optionalSolutionModel = this.solutionRepository.findById(modifyKnownErrorDto.id());
-        if (optionalSolutionModel.isEmpty()) {
-            return false;
-        }
-        SolutionModel solution = optionalSolutionModel.get();
-
-        if (modifyKnownErrorDto.error() != null && !modifyKnownErrorDto.error().isBlank()) {
-            solution.setError(modifyKnownErrorDto.error());
-        }
-
-        if (modifyKnownErrorDto.solution() != null && !modifyKnownErrorDto.solution().isBlank()) {
-            solution.setSolution(modifyKnownErrorDto.solution());
-        }
-
-        if (modifyKnownErrorDto.matches() != null && !modifyKnownErrorDto.matches().isEmpty()) {
-            solution.setMatches(modifyKnownErrorDto.matches());
-        }
-
-        if (modifyKnownErrorDto.arguments() != null && !modifyKnownErrorDto.arguments().isEmpty()) {
-            solution.setArguments(modifyKnownErrorDto.arguments());
-        }
-        this.solutionRepository.save(solution);
-
-        return true;
     }
 
     /**
