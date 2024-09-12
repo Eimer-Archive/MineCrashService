@@ -50,10 +50,10 @@ public class ErrorService {
                 Matcher matcher = Pattern.compile(solutionModel.getArguments().get(arg)).matcher(error); // TODO: Allow multiple possibly ways if the initial one fails
 
                 if (matcher.find()) {
-                    solution = solution.replaceAll("%" + arg, matcher.group(1));
+                    solution = solution.replaceAll("%" + arg, Matcher.quoteReplacement(matcher.group(1)));
+                } else {
+                    solution = solution.replaceAll("%" + arg, "(Unable to find extra info)");
                 }
-
-                solution = solution.replaceAll("%" + arg, "(Unable to find extra info)");
             }
 
             this.statisticsService.incrementSolvedErrors();
