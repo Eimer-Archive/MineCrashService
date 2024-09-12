@@ -32,8 +32,17 @@ public class StartupService implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
+        String zipString = "https://api.github.com/repos/Eimer-Archive/MineCrashSolutions/zipball";
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equals("-zip") && i != args.length - 1) {
+                zipString = args[i + 1];
+            }
+        }
+
         try {
-            byte[] zipBytes = downloadZipAsByteArray("https://api.github.com/repos/Eimer-Archive/MineCrashSolutions/zipball");
+            byte[] zipBytes = downloadZipAsByteArray(zipString);
 
             String newHash = calculateZipFileHash(zipBytes);
             String lastHash = this.settingsService.getZipHash();
