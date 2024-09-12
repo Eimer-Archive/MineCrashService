@@ -2,11 +2,10 @@ package com.imjustdoom.minecrashservice.model;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-@Entity
+@Entity(name = "solution")
 public class SolutionModel {
 
     @Id
