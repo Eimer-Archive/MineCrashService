@@ -50,7 +50,10 @@ public class ErrorService {
                 Matcher matcher = Pattern.compile(solutionModel.getArguments().get(arg)).matcher(error); // TODO: Allow multiple possibly ways if the initial one fails
 
                 if (matcher.find()) {
-                    solution = solution.replaceAll("%" + arg, Matcher.quoteReplacement(matcher.group(1)));
+                    for (int i = 1; i <= matcher.groupCount(); i++) {
+                        if (matcher.group(i) == null) continue;
+                        solution = solution.replaceAll("%" + arg, Matcher.quoteReplacement(matcher.group(i)));
+                    }
                 } else {
                     solution = solution.replaceAll("%" + arg, "(Unable to find extra info, try providing more information in the error)");
                 }
