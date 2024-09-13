@@ -11,6 +11,8 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.zip.ZipEntry;
@@ -34,15 +36,23 @@ public class StartupService implements CommandLineRunner {
     public void run(String... args) {
 
         String zipString = "https://api.github.com/repos/Eimer-Archive/MineCrashSolutions/zipball";
+        boolean isLocalZip = false;
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equals("-zip") && i != args.length - 1) {
                 zipString = args[i + 1];
+            } else if (arg.equals("-localZip")) {
+                isLocalZip = true;
             }
         }
 
         try {
-            byte[] zipBytes = downloadZipAsByteArray(zipString);
+            byte[] zipBytes;
+            if (isLocalZip) {
+                zipBytes = readLocalZipBytes(zipString);
+            } else {
+                zipBytes = downloadZipAsByteArray(zipString);
+            }
 
             String newHash = calculateZipFileHash(zipBytes);
             String lastHash = this.settingsService.getZipHash();
@@ -88,6 +98,10 @@ public class StartupService implements CommandLineRunner {
         }
     }
 
+    private byte[] readLocalZipBytes(String path) throws IOException {
+        return Files.readAllBytes(Path.of(path));
+    }
+
     private void processZipFromByteArray(byte[] zipBytes) throws IOException {
         try (ZipInputStream zipIn = new ZipInputStream(new ByteArrayInputStream(zipBytes))) {
             ZipEntry entry = zipIn.getNextEntry();
@@ -97,7 +111,7 @@ public class StartupService implements CommandLineRunner {
                 String name = entry.getName();
                 System.out.println("Entry: " + name);
 
-                if (name.contains("solutions/") && !entry.isDirectory()) {
+                if (name.contains("solutions/") && !entry.isDirectory() && name.endsWith(".json")) {
                     readFileFromZip(zipIn);
                 }
 
