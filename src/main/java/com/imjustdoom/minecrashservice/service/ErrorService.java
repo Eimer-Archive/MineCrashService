@@ -52,7 +52,7 @@ public class ErrorService {
                 if (matcher.find()) {
                     solution = solution.replaceAll("%" + arg, Matcher.quoteReplacement(matcher.group(1)));
                 } else {
-                    solution = solution.replaceAll("%" + arg, "(Unable to find extra info)");
+                    solution = solution.replaceAll("%" + arg, "(Unable to find extra info, try providing more information in the error)");
                 }
             }
 
