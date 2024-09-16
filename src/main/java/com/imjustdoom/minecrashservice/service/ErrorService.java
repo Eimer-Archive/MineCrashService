@@ -25,11 +25,6 @@ public class ErrorService {
         this.statisticsService = statisticsService;
     }
 
-    /**
-     * Search for a solution that can be applied to this error
-     * @param error
-     * @return the found solution as a Dto or else null
-     */
     public ErrorSolutionDto findSolution(String error) {
         for (SolutionModel solutionModel : this.solutionService.getAllSolutions()) {
 
@@ -43,7 +38,9 @@ public class ErrorService {
                 matches = true;
                 break;
             }
-            if (!matches) continue;
+            if (!matches) {
+                continue;
+            }
 
             String solution = solutionModel.getSolution();
             for (String arg : solutionModel.getArguments().keySet()) {

@@ -70,7 +70,6 @@ public class StartupService implements CommandLineRunner {
             processZipFromByteArray(zipBytes);
         } catch (IOException exception) {
             System.err.println("Unable to fetch updated solutions");
-            exception.printStackTrace();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

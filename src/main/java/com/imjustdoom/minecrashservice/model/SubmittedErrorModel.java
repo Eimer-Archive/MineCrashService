@@ -7,13 +7,15 @@ import java.time.LocalDateTime;
 @Entity
 public class SubmittedErrorModel {
 
+    // Unused. Not sure if it will be implemented again in the future
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Column
     private LocalDateTime submitTime;
     @Lob
-    @Column(length = 102400) // Should be 800kb
+    @Column(length = 102400)
     private String error;
 
     public SubmittedErrorModel() {}
