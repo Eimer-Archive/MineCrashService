@@ -2,7 +2,7 @@ package com.imjustdoom.minecrashservice.model;
 
 import jakarta.persistence.*;
 
-@Entity
+@Entity(name = "settings")
 public class SettingsModel {
 
     @Id

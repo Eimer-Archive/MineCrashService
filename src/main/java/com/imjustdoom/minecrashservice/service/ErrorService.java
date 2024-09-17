@@ -2,25 +2,18 @@ package com.imjustdoom.minecrashservice.service;
 
 import com.imjustdoom.minecrashservice.dto.out.ErrorSolutionDto;
 import com.imjustdoom.minecrashservice.model.SolutionModel;
-import com.imjustdoom.minecrashservice.model.SubmittedErrorModel;
-import com.imjustdoom.minecrashservice.repository.SubmittedErrorRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class ErrorService {
 
-    private final SubmittedErrorRepository errorRepository;
-
     private final SolutionService solutionService;
     private final StatisticsService statisticsService;
 
-    public ErrorService(SubmittedErrorRepository errorRepository, SolutionService solutionService, StatisticsService statisticsService) {
-        this.errorRepository = errorRepository;
-
+    public ErrorService(SolutionService solutionService, StatisticsService statisticsService) {
         this.solutionService = solutionService;
         this.statisticsService = statisticsService;
     }
@@ -62,43 +55,6 @@ public class ErrorService {
         return null;
     }
 
-    /**
-     * Checks if the table already contains this exact error
-     *
-     * @param error
-     * @return
-     */
-    public boolean containsError(String error) {
-        return this.errorRepository.findByError(error).isPresent();
-    }
-
-    /**
-     * Submit the error to the database
-     *
-     * @param error
-     * @return the object
-     */
-    public SubmittedErrorModel submitError(String error) {
-        SubmittedErrorModel submittedErrorModel = new SubmittedErrorModel(replaceIps(error));
-        return this.errorRepository.save(submittedErrorModel);
-    }
-
-    /**
-     * Get the submitted error by its error
-     * @param error
-     * @return Optional SubmittedErrorModel
-     */
-    public Optional<SubmittedErrorModel> getSubmittedErrorIdByError(String error) {
-        return this.errorRepository.findByError(error);
-    }
-
-    /**
-     * Get how many errors are in line for review
-     * @return the errors in line for review as a long
-     */
-    public long getSubmittedCount() {
-        return this.errorRepository.count();
-    }
 
     /**
      * Replace any IPv4 addresses with 'x.x.x.x'

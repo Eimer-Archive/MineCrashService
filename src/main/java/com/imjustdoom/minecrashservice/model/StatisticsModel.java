@@ -12,6 +12,8 @@ public class StatisticsModel {
     @Column
     private long solvedErrors;
 
+    private boolean test;
+
     public StatisticsModel() {
         this.solvedErrors = 0;
     }

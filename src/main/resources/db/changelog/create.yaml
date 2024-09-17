@@ -1,0 +1,111 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: JustDoom
+      changes:
+        - createTable:
+            tableName: settings
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: last_solutions_zip_hash
+                  type: varchar(255)
+
+  - changeSet:
+      id: 2
+      author: JustDoom
+      changes:
+        - createTable:
+            tableName: solution
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: error
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: solution
+                  type: varchar(1024)
+
+  - changeSet:
+      id: 3
+      author: JustDoom
+      changes:
+        - createTable:
+            tableName: matches
+            columns:
+              - column:
+                  name: error_solution_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: match_value
+                  type: varchar(255)
+
+        - addForeignKeyConstraint:
+            baseTableName: matches
+            baseColumnNames: error_solution_id
+            referencedTableName: solution
+            referencedColumnNames: id
+            constraintName: fk_matches_solution
+
+  - changeSet:
+      id: 4
+      author: JustDoom
+      changes:
+        - createTable:
+            tableName: arguments
+            columns:
+              - column:
+                  name: error_solution_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: argument_key
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: argument_value
+                  type: varchar(255)
+
+        - addForeignKeyConstraint:
+            baseTableName: arguments
+            baseColumnNames: error_solution_id
+            referencedTableName: solution
+            referencedColumnNames: id
+            constraintName: fk_arguments_solution
+
+  - changeSet:
+      id: 5
+      author: JustDoom
+      changes:
+        - createTable:
+            tableName: statistics_model
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: solved_errors
+                  type: bigint
