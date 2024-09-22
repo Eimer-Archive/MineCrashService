@@ -1,8 +1,8 @@
 package com.imjustdoom.minecrashservice.dto.out;
 
-public record ResponseDto(String response) {
+public record ResponseDto(String response, long took) {
 
-    public static ResponseDto create(String response) {
-        return new ResponseDto(response);
+    public static ResponseDto create(String response, long took) {
+        return new ResponseDto(response, took);
     }
 }

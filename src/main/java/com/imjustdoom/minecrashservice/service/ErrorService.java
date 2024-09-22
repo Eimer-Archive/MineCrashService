@@ -18,7 +18,7 @@ public class ErrorService {
         this.statisticsService = statisticsService;
     }
 
-    public ErrorSolutionDto findSolution(String error) {
+    public ErrorSolutionDto findSolution(String error, long start) {
         for (SolutionModel solutionModel : this.solutionService.getAllSolutions()) {
 
             // Matches system is an "or"
@@ -50,7 +50,7 @@ public class ErrorService {
             }
 
             this.statisticsService.incrementSolvedErrors();
-            return ErrorSolutionDto.create(solutionModel.getError(), solution);
+            return ErrorSolutionDto.create(solutionModel.getError(), solution, System.currentTimeMillis() - start);
         }
         return null;
     }

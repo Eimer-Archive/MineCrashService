@@ -31,7 +31,8 @@ public class ErrorController {
             return ResponseEntity.badRequest().body(ErrorDto.create("Error length is too long, max file size is "));
         }
 
-        ErrorSolutionDto solution = this.errorService.findSolution(checkErrorDto.error());
+        long start = System.currentTimeMillis();
+        ErrorSolutionDto solution = this.errorService.findSolution(checkErrorDto.error(), start);
         return ResponseEntity.ok(Objects.requireNonNullElseGet(solution, () -> ResponseDto.create(
                 "Unable to solve this error. Try updating any server software"
                 + " (Paper, Purpur etc), mods, plugins you have installed or the Minecraft version itself. Or include"
@@ -39,7 +40,8 @@ public class ErrorController {
                 + " this to be able to solve it. Otherwise please ask for support in a suitable place like the PaperMC,"
                 + " Purpur, your plugin/mod if you know it is causing the issue, etc discord server or forums."
                 + " If you find the solution please submit it for us to add to the database"
-                + " [here](https://github.com/Eimer-Archive/MineCrashSolutions?tab=readme-ov-file#requesting-a-solution-to-be-added)!"
+                + " [here](https://github.com/Eimer-Archive/MineCrashSolutions?tab=readme-ov-file#requesting-a-solution-to-be-added)!",
+                System.currentTimeMillis() - start
         )));
 
     }
